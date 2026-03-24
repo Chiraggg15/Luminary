@@ -97,4 +97,12 @@ export const aiAPI = {
   improveSummary: (data) => api.post('/ai/improve-summary', data),
 };
 
+// ═══════════════════════════════════════════════════════════════════════════
+// Interview API Calls
+// ═══════════════════════════════════════════════════════════════════════════
+export const interviewAPI = {
+  /** Generate mock interview questions */
+  generateQuestions: (data) => api.post('/interview/generate', data),
+};
+
 export default api;
