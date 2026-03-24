@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import ResumeBuilder from './pages/ResumeBuilder';
 import CoverLetter from './pages/CoverLetter';
 import MockInterview from './pages/MockInterview';
+import Landing from './pages/Landing';
 
 /* eslint-disable react/prop-types */
 const ProtectedRoute = ({ children }) => {
@@ -46,6 +47,7 @@ export default function App() {
           }}
         />
         <Routes>
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route

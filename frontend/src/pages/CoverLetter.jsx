@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { aiAPI } from '../services/api';
 import toast from 'react-hot-toast';
-import { PenTool, Copy, Check, Sparkles, MoveRight } from 'lucide-react';
+import { PenTool, Copy, Check, Sparkles, MoveRight, FileText } from 'lucide-react';
 
 export default function CoverLetter() {
   const [formData, setFormData] = useState({ job_title: '', company: '', job_description: '', skills: '' });
