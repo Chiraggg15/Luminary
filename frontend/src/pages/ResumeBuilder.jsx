@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { User, Briefcase, GraduationCap, Wrench, Sparkles, Eye, Save, Plus, Trash2, ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Activity } from 'lucide-react';
+import { User, Briefcase, GraduationCap, Wrench, Sparkles, Eye, Save, Plus, Trash2, ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Activity, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { resumeAPI, aiAPI } from '../services/api';
 
@@ -336,13 +336,16 @@ export default function ResumeBuilder() {
 
       case 5: return (
         <div className="animate-[fadeIn_0.3s_ease-out]">
-          <div className="mb-6 flex justify-between items-center">
+          <div className="mb-6 flex justify-between items-center hide-on-print">
             <div>
               <h3 className="text-xl font-bold text-white mb-1">Final render</h3>
               <p className="text-zinc-400 text-sm">Review your compiled document before distribution.</p>
             </div>
+            <button onClick={() => window.print()} className="btn-primary text-sm flex items-center gap-2">
+              <Download size={16} /> Download PDF
+            </button>
           </div>
-          <div className="bg-white text-zinc-900 rounded-sm p-8 max-w-4xl mx-auto shadow-2xl min-h-[850px] font-sans border-t-[16px] border-zinc-900">
+          <div className="print-area bg-white text-zinc-900 rounded-sm p-8 max-w-4xl mx-auto shadow-2xl min-h-[850px] font-sans border-t-[16px] border-zinc-900">
             <div className="mb-6 pb-6 border-b border-zinc-200">
               <h1 className="text-4xl font-extrabold text-zinc-950 uppercase tracking-tighter mb-2">{resume.personal_info.full_name || 'JOHN DOE'}</h1>
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-600 font-medium">
