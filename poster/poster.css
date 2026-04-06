@@ -1,0 +1,329 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Outfit:wght@400;600;700&display=swap');
+
+:root {
+    --primary: #1e3a8a; /* Deep Blue */
+    --secondary: #3b82f6; /* Lighter Blue */
+    --accent: #22c55e; /* Green for checkmarks/success */
+    --background: #ffffff;
+    --card-bg: #f8fafc;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --border: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    
+    /* Poster Dimensions (A1 Landscape Ratio) */
+    --poster-width: 1189mm; /* A0 width */
+    --poster-height: 841mm; /* A1 width is A0/2, but we'll use a fixed large ratio */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+    background-color: #525659; /* PDF viewer background color */
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.poster-container {
+    width: 2384px; /* Scaled A1 width */
+    height: 1684px; /* Scaled A1 height */
+    background: var(--background);
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Header Section */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 4px solid var(--primary);
+    padding-bottom: 30px;
+}
+
+.logos {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.logo-box {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+    font-size: 24px;
+    color: var(--primary);
+    border: 2px dashed var(--border);
+    padding: 0 20px;
+}
+
+.title-section {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.project-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 84px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+    letter-spacing: -2px;
+}
+
+.project-tagline {
+    font-size: 32px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.student-info {
+    text-align: right;
+    font-size: 24px;
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.student-info strong {
+    color: var(--primary);
+}
+
+/* Main Grid Layout */
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 40px;
+    flex-grow: 1;
+}
+
+/* Card Styling */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: var(--shadow);
+}
+
+.card h2 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 42px;
+    color: var(--primary);
+    border-left: 10px solid var(--secondary);
+    padding-left: 20px;
+    margin-bottom: 10px;
+}
+
+.card p, .card li {
+    font-size: 24px;
+    line-height: 1.6;
+    color: var(--text-main);
+}
+
+.card ul {
+    list-style: none;
+}
+
+.card li {
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 15px;
+}
+
+.card li::before {
+    content: "•";
+    color: var(--secondary);
+    font-size: 40px;
+    position: absolute;
+    left: 0;
+    top: -10px;
+}
+
+/* Specific Section Styles */
+.highlights-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.highlight-item {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.highlight-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--secondary);
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Comparison Table */
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.comparison-table th, .comparison-table td {
+    padding: 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 22px;
+}
+
+.comparison-table th {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.comparison-table .check {
+    color: var(--accent);
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.comparison-table .cross {
+    color: #ef4444;
+    font-size: 32px;
+    font-weight: 800;
+}
+
+/* Artefact (System Architecture) */
+.artefact-box {
+    background: white;
+    border: 2px solid var(--primary);
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.arch-main {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    width: 100%;
+}
+
+.arch-row {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    gap: 20px;
+}
+
+.arch-node {
+    background: var(--primary);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 20px;
+    text-align: center;
+    position: relative;
+    min-width: 200px;
+}
+
+.arch-arrow {
+    font-size: 30px;
+    color: var(--secondary);
+}
+
+/* Progress / Gantt Chart */
+.gantt-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.gantt-row {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.gantt-label {
+    width: 200px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.gantt-bar-container {
+    flex-grow: 1;
+    background: white;
+    height: 30px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.gantt-bar {
+    height: 100%;
+    background: var(--secondary);
+}
+
+/* Print Instructions Overlay (hidden during print) */
+.print-help {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--primary);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    z-index: 100;
+}
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+    .poster-container {
+        box-shadow: none;
+        margin: 0;
+    }
+    .print-help {
+        display: none;
+    }
+}

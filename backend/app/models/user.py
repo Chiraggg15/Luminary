@@ -9,7 +9,7 @@ MongoDB Document Structure:
   "_id": ObjectId,
   "full_name": str,
   "email": str (unique),
-  "password_hash": str,         # bcrypt hash — never store plain text
+  "password_hash": str,         # bcrypt hash 
   "created_at": datetime,
   "updated_at": datetime,
   "profile": {

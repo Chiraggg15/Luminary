@@ -21,7 +21,7 @@ export default function MockInterview() {
     setExpandedIndex(0);
     try {
       const skillsArray = formData.skills.split(',').map(s => s.trim()).filter(Boolean);
-      const res = await interviewAPI.generateQuestions({ ...formData, experience: Number(formData.experience), skills: skillsArray, question_count: 5 });
+      const res = await interviewAPI.generateQuestions({ ...formData, experience: Number(formData.experience), skills: skillsArray, question_count: 6 });
       setQuestions(res.data.questions);
       toast.success('Interview models generated.');
     } catch (err) {

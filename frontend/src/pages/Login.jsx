@@ -68,7 +68,7 @@ export default function Login() {
         <div className="relative z-10 max-w-xl">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-zinc-800 bg-zinc-900/50 mb-8">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span className="text-xs font-semibold tracking-wide text-zinc-300 uppercase">ResumeAI 2.0</span>
+            <span className="text-xs font-semibold tracking-wide text-zinc-300 uppercase">Luminary 1.0</span>
           </div>
           
           <h1 className="text-5xl xl:text-6xl font-bold text-white mb-6 leading-[1.1] tracking-tight">
@@ -80,7 +80,7 @@ export default function Login() {
 
           <div className="grid grid-cols-2 gap-8">
             <div className="border-l border-zinc-800 pl-4">
-              <h3 className="text-white font-semibold mb-1">AI Resume Builder</h3>
+              <h3 className="text-white font-semibold mb-1">Luminary Resume Builder</h3>
               <p className="text-zinc-500 text-sm leading-relaxed">Instantly generate keyword-optimized summaries and bullets powered by GPT-4.</p>
             </div>
             <div className="border-l border-zinc-800 pl-4">
@@ -96,7 +96,7 @@ export default function Login() {
         <div className="w-full max-w-md">
           <div className="text-center mb-10">
             <div className="w-10 h-10 rounded bg-emerald-500 flex items-center justify-center text-zinc-950 font-bold text-xl mx-auto mb-6 lg:hidden">
-              R
+              L
             </div>
             <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Welcome back</h2>
             <p className="text-zinc-400">Sign in to your account to continue</p>

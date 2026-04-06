@@ -14,7 +14,7 @@ export default function Landing() {
             <div className="bg-emerald-500 p-2 rounded-lg">
               <Sparkles className="w-5 h-5 text-zinc-950" />
             </div>
-            <span className="text-xl font-bold text-white tracking-tight">AI Resume Builder</span>
+            <span className="text-xl font-bold text-white tracking-tight">Luminary</span>
           </div>
           <div className="flex items-center gap-4">
             {user ? (
@@ -88,7 +88,7 @@ export default function Landing() {
               <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                 <LayoutTemplate className="w-6 h-6 text-emerald-400" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">AI Resume Builder</h3>
+              <h3 className="text-xl font-bold text-white mb-3">Luminary Resume Builder</h3>
               <p className="text-zinc-400 leading-relaxed">
                 Generate tailored, ATS-optimized resumes based on your skills and experience. Choose from elegant, professional templates.
               </p>
@@ -150,9 +150,9 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Sparkles className="w-5 h-5 text-emerald-500" />
-            <span className="font-semibold text-white tracking-tight">AI Resume Builder</span>
+            <span className="font-semibold text-white tracking-tight">Luminary</span>
           </div>
-          <p className="text-zinc-500 text-sm">© {new Date().getFullYear()} AI Resume Builder. All rights reserved.</p>
+          <p className="text-zinc-500 text-sm">© {new Date().getFullYear()} Luminary. All rights reserved.</p>
         </div>
       </footer>
     </div>

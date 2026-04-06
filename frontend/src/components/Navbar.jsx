@@ -14,10 +14,10 @@ export default function Navbar() {
         {/* ── Logo ─────────────────────────────────────────────────────── */}
         <Link to="/dashboard" className="flex items-center gap-2 group">
           <div className="w-8 h-8 rounded bg-emerald-500 flex items-center justify-center text-zinc-950 font-bold text-lg">
-            R
+            L
           </div>
           <span className="font-bold tracking-tight text-white hidden md:block">
-            ResumeAI
+            Luminary
           </span>
         </Link>
 
