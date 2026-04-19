@@ -118,6 +118,48 @@ class UserModel:
         return result.modified_count > 0
 
     @staticmethod
+    def set_reset_token(db, email: str, token: str, expiry: datetime) -> bool:
+        """Save a password reset token and its expiry for a user."""
+        result = db[UserModel.COLLECTION].update_one(
+            {"email": email.lower().strip()},
+            {
+                "$set": {
+                    "reset_token": token,
+                    "reset_token_expiry": expiry,
+                    "updated_at": datetime.now(timezone.utc)
+                }
+            }
+        )
+        return result.modified_count > 0
+
+    @staticmethod
+    def find_by_reset_token(db, token: str) -> dict | None:
+        """Find a valid user by reset token that hasn't expired."""
+        now = datetime.now(timezone.utc)
+        return db[UserModel.COLLECTION].find_one({
+            "reset_token": token,
+            "reset_token_expiry": {"$gt": now}
+        })
+
+    @staticmethod
+    def reset_password(db, user_id: str, new_password: str) -> bool:
+        """Update password and clear reset token."""
+        result = db[UserModel.COLLECTION].update_one(
+            {"_id": ObjectId(user_id)},
+            {
+                "$set": {
+                    "password_hash": UserModel.hash_password(new_password),
+                    "updated_at": datetime.now(timezone.utc)
+                },
+                "$unset": {
+                    "reset_token": "",
+                    "reset_token_expiry": ""
+                }
+            }
+        )
+        return result.modified_count > 0
+
+    @staticmethod
     def serialize(user_doc: dict) -> dict:
         """Convert a MongoDB document to a JSON-safe dict (removes password hash)."""
         return {

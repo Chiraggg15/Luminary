@@ -7,12 +7,14 @@ Initializes the Flask app with all extensions and registers blueprints.
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask_mail import Mail
 from pymongo import MongoClient
 from .config import Config
 
-# Global MongoDB client accessible across the app
+# Global extensions/clients
 mongo_client = None
 db = None
+mail = Mail()
 
 
 def create_app(config_class=Config):
@@ -23,6 +25,7 @@ def create_app(config_class=Config):
     # ── Extensions ──────────────────────────────────────────────────────────
     CORS(app, resources={r"/api/*": {"origins": "*"}})  # Allow all origins (restrict in production)
     JWTManager(app)
+    mail.init_app(app)
 
     # ── MongoDB Connection ───────────────────────────────────────────────────
     global mongo_client, db

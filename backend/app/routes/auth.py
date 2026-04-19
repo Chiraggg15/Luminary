@@ -15,6 +15,9 @@ from app import db
 from app.models.user import UserModel
 from app.utils.validators import is_valid_email, is_strong_password, validate_required_fields
 from app.utils.jwt_helper import jwt_required_custom, get_current_user_id
+from app.utils.mailer import send_reset_password_email
+import secrets
+from datetime import datetime, timedelta, timezone
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -175,3 +178,69 @@ def google_login():
         return jsonify({"error": "Invalid Google token"}), 401
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# POST /api/auth/forgot-password
+# ────────────────────────────────────────────────────────────────────────────
+@auth_bp.route("/forgot-password", methods=["POST"])
+def forgot_password():
+    """Generate a reset token and send an email to the user."""
+    data = request.get_json() or {}
+    email = data.get("email")
+
+    if not email or not is_valid_email(email):
+        return jsonify({"error": "Valid email is required"}), 400
+
+    user = UserModel.find_by_email(db, email)
+    if not user:
+        # Return success even if user not found to prevent email enumeration
+        return jsonify({"message": "If that email exists, a reset link has been sent."}), 200
+
+    # Generate secure token
+    token = secrets.token_urlsafe(32)
+    expiry = datetime.now(timezone.utc) + timedelta(hours=1)
+
+    # Save to DB
+    UserModel.set_reset_token(db, email, token, expiry)
+
+    # Send Email
+    reset_link = f"{current_app.config['FRONTEND_URL']}/reset-password/{token}"
+    sent = send_reset_password_email(email, user.get("full_name", "User"), reset_link)
+
+    if not sent:
+        # If email fails, in debug mode we already printed it to console
+        return jsonify({"message": "Reset link generated (check server logs in dev mode)"}), 200
+
+    return jsonify({"message": "Reset link has been sent to your email."}), 200
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# POST /api/auth/reset-password
+# ────────────────────────────────────────────────────────────────────────────
+@auth_bp.route("/reset-password", methods=["POST"])
+def reset_password():
+    """Verify reset token and update user's password."""
+    data = request.get_json() or {}
+    token = data.get("token")
+    new_password = data.get("password")
+
+    if not token or not new_password:
+        return jsonify({"error": "Token and password are required"}), 400
+
+    # Validate new password strength
+    ok, err = is_strong_password(new_password)
+    if not ok:
+        return jsonify({"error": err}), 400
+
+    # Find user by valid token
+    user = UserModel.find_by_reset_token(db, token)
+    if not user:
+        return jsonify({"error": "Invalid or expired reset token"}), 400
+
+    # Update password
+    success = UserModel.reset_password(db, str(user["_id"]), new_password)
+    if not success:
+        return jsonify({"error": "Failed to reset password"}), 500
+
+    return jsonify({"message": "Password has been reset successfully"}), 200

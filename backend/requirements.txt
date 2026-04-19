@@ -21,3 +21,4 @@ google-generativeai==0.8.3
 waitress==3.0.0
 httpx==0.27.2
 google-auth==2.30.0
+flask-mail==0.9.1
