@@ -38,12 +38,14 @@ def create_app(config_class=Config):
     from .routes.ai import ai_bp
     from .routes.pdf import pdf_bp
     from .routes.interview import interview_bp
+    from .routes.docx import docx_bp
 
-    app.register_blueprint(auth_bp,   url_prefix="/api/auth")
-    app.register_blueprint(resume_bp, url_prefix="/api/resume")
-    app.register_blueprint(ai_bp,     url_prefix="/api/ai")
-    app.register_blueprint(pdf_bp,    url_prefix="/api/pdf")
+    app.register_blueprint(auth_bp,      url_prefix="/api/auth")
+    app.register_blueprint(resume_bp,    url_prefix="/api/resume")
+    app.register_blueprint(ai_bp,        url_prefix="/api/ai")
+    app.register_blueprint(pdf_bp,       url_prefix="/api/pdf")
     app.register_blueprint(interview_bp, url_prefix="/api/interview")
+    app.register_blueprint(docx_bp,      url_prefix="/api/docx")
 
     # ── Health Check Route ───────────────────────────────────────────────────
     @app.route("/api/health")

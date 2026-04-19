@@ -244,3 +244,34 @@ def reset_password():
         return jsonify({"error": "Failed to reset password"}), 500
 
     return jsonify({"message": "Password has been reset successfully"}), 200
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# POST /api/auth/change-password  — Change password while logged in
+# ────────────────────────────────────────────────────────────────────────────
+@auth_bp.route("/change-password", methods=["POST"])
+@jwt_required_custom
+def change_password():
+    """Change the password for the currently authenticated user."""
+    user_id = get_current_user_id()
+    data = request.get_json() or {}
+
+    current_password = data.get("current_password", "").strip()
+    new_password = data.get("new_password", "").strip()
+
+    if not current_password or not new_password:
+        return jsonify({"error": "Both current and new password are required"}), 400
+
+    user = UserModel.find_by_id(db, user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    if not UserModel.check_password(user, current_password):
+        return jsonify({"error": "Current password is incorrect"}), 401
+
+    ok, err = is_strong_password(new_password)
+    if not ok:
+        return jsonify({"error": err}), 400
+
+    UserModel.update_password(db, user_id, new_password)
+    return jsonify({"message": "Password updated successfully"}), 200

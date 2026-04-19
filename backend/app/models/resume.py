@@ -158,3 +158,63 @@ class ResumeModel:
         doc["created_at"] = str(doc.get("created_at", ""))
         doc["updated_at"] = str(doc.get("updated_at", ""))
         return doc
+
+    # ── Snapshot / Version History ────────────────────────────────────────────
+
+    SNAPSHOT_COLLECTION = "resume_snapshots"
+    MAX_SNAPSHOTS = 10
+
+    @staticmethod
+    def save_snapshot(db, resume_id: str, resume_data: dict) -> None:
+        """Save the current state of a resume as a versioned snapshot."""
+        now = datetime.now(timezone.utc)
+        snapshot = {
+            "resume_id": resume_id,
+            "saved_at": now,
+            "data": {k: v for k, v in resume_data.items() if k not in ("_id", "user_id")},
+        }
+        db[ResumeModel.SNAPSHOT_COLLECTION].insert_one(snapshot)
+
+        # Keep only the last MAX_SNAPSHOTS
+        all_snaps = list(db[ResumeModel.SNAPSHOT_COLLECTION].find(
+            {"resume_id": resume_id}
+        ).sort("saved_at", -1))
+
+        if len(all_snaps) > ResumeModel.MAX_SNAPSHOTS:
+            old_ids = [s["_id"] for s in all_snaps[ResumeModel.MAX_SNAPSHOTS:]]
+            db[ResumeModel.SNAPSHOT_COLLECTION].delete_many({"_id": {"$in": old_ids}})
+
+    @staticmethod
+    def get_snapshots(db, resume_id: str) -> list:
+        """Return all snapshots for a resume, newest first."""
+        cursor = db[ResumeModel.SNAPSHOT_COLLECTION].find(
+            {"resume_id": resume_id}
+        ).sort("saved_at", -1)
+        result = []
+        for snap in cursor:
+            result.append({
+                "id": str(snap["_id"]),
+                "saved_at": str(snap["saved_at"]),
+            })
+        return result
+
+    @staticmethod
+    def restore_snapshot(db, resume_id: str, snapshot_id: str) -> bool:
+        """Restore a resume to a specific snapshot state."""
+        try:
+            snap = db[ResumeModel.SNAPSHOT_COLLECTION].find_one(
+                {"_id": ObjectId(snapshot_id), "resume_id": resume_id}
+            )
+        except Exception:
+            return False
+
+        if not snap:
+            return False
+
+        restore_data = snap["data"]
+        restore_data["updated_at"] = datetime.now(timezone.utc)
+        db[ResumeModel.COLLECTION].update_one(
+            {"_id": ObjectId(resume_id)},
+            {"$set": restore_data},
+        )
+        return True

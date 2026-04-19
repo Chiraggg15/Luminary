@@ -169,3 +169,25 @@ class UserModel:
             "profile": user_doc.get("profile", {}),
             "created_at": str(user_doc.get("created_at", "")),
         }
+
+    @staticmethod
+    def check_password(user_doc: dict, plain_password: str) -> bool:
+        """Check a plain password against the stored hash. Alias for verify_password."""
+        hashed = user_doc.get("password_hash")
+        if not hashed:
+            return False  # Google-only accounts have no password
+        return UserModel.verify_password(plain_password, hashed)
+
+    @staticmethod
+    def update_password(db, user_id: str, new_password: str) -> bool:
+        """Update the password hash for an authenticated user (not via reset token)."""
+        result = db[UserModel.COLLECTION].update_one(
+            {"_id": ObjectId(user_id)},
+            {
+                "$set": {
+                    "password_hash": UserModel.hash_password(new_password),
+                    "updated_at": datetime.now(timezone.utc),
+                }
+            },
+        )
+        return result.modified_count > 0
