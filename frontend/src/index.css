@@ -17,6 +17,13 @@
   /* Form Elements */
   .input-glass {
     @apply w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-zinc-100 placeholder:text-zinc-600 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/50 transition-all font-medium;
+    color-scheme: dark;
+  }
+
+  /* Style the native date picker indicator to match the theme */
+  .input-glass::-webkit-calendar-picker-indicator {
+    @apply cursor-pointer opacity-50 hover:opacity-100 transition-opacity;
+    filter: invert(0.8) sepia(1) saturate(5) hue-rotate(100deg); /* Adjust to emerald-ish or zinc */
   }
 
   .label-glass {

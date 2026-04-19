@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { User, Briefcase, GraduationCap, Wrench, Sparkles, Eye, Save, Plus, Trash2, ArrowLeft, ArrowRight, CheckCircle2, ChevronRight, Activity, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { resumeAPI, aiAPI } from '../services/api';
+import CalendarInput from '../components/CalendarInput';
 
 const STEPS = [
   { id: 0, label: 'Personal',    icon: User         },
@@ -182,14 +183,18 @@ export default function ResumeBuilder() {
                     {[['company','Company','Nepal Telecom'],['position','Job Title','Software Engineer']].map(([f,l,p]) => (
                       <div key={f}><label className="label-glass">{l}</label><input className="input-glass" placeholder={p} value={exp[f]||''} onChange={e=>updateExp(i,f,e.target.value)}/></div>
                     ))}
-                    <div>
-                      <label className="label-glass">Start Date</label>
-                      <input className="input-glass" type="month" value={exp.start_date||''} onChange={e=>updateExp(i,'start_date',e.target.value)}/>
-                    </div>
-                    <div>
-                      <label className="label-glass">End Date</label>
-                      <input className="input-glass disabled:opacity-50 disabled:bg-zinc-900" type={exp.is_current?'text':'month'} disabled={exp.is_current} value={exp.is_current?'Present':exp.end_date||''} onChange={e=>updateExp(i,'end_date',e.target.value)}/>
-                    </div>
+                    <CalendarInput 
+                      label="Start Date" 
+                      value={exp.start_date||''} 
+                      onChange={val => updateExp(i, 'start_date', val)} 
+                    />
+                    <CalendarInput 
+                      label="End Date" 
+                      type={exp.is_current ? 'text' : 'month'}
+                      disabled={exp.is_current}
+                      value={exp.is_current ? 'Present' : exp.end_date||''}
+                      onChange={val => updateExp(i, 'end_date', val)}
+                    />
                     <div className="md:col-span-2">
                       <label className="flex items-center gap-3 text-sm font-medium text-zinc-400 cursor-pointer w-max">
                         <input type="checkbox" className="w-4 h-4 rounded border-zinc-800 bg-zinc-950 text-emerald-500 focus:ring-emerald-500" checked={exp.is_current||false} onChange={e=>updateExp(i,'is_current',e.target.checked)}/>
@@ -241,8 +246,16 @@ export default function ResumeBuilder() {
                     ].map(([f,l,p]) => (
                       <div key={f}><label className="label-glass">{l}</label><input className="input-glass" placeholder={p} value={edu[f]||''} onChange={e=>updateEdu(i,f,e.target.value)}/></div>
                     ))}
-                    <div><label className="label-glass">Start Date</label><input className="input-glass" type="month" value={edu.start_date||''} onChange={e=>updateEdu(i,'start_date',e.target.value)}/></div>
-                    <div><label className="label-glass">Graduation</label><input className="input-glass" type="month" value={edu.end_date||''} onChange={e=>updateEdu(i,'end_date',e.target.value)}/></div>
+                    <CalendarInput 
+                      label="Start Date" 
+                      value={edu.start_date||''} 
+                      onChange={val => updateEdu(i, 'start_date', val)} 
+                    />
+                    <CalendarInput 
+                      label="Graduation" 
+                      value={edu.end_date||''} 
+                      onChange={val => updateEdu(i, 'end_date', val)} 
+                    />
                   </div>
                 </div>
               ))}

@@ -10,6 +10,8 @@ import ResumeBuilder from './pages/ResumeBuilder';
 import CoverLetter from './pages/CoverLetter';
 import MockInterview from './pages/MockInterview';
 import Landing from './pages/Landing';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 /* eslint-disable react/prop-types */
 const ProtectedRoute = ({ children }) => {
@@ -50,6 +52,8 @@ export default function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route
             path="/*"
             element={

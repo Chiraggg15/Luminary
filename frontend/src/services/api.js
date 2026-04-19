@@ -59,6 +59,12 @@ export const authAPI = {
 
   /** Update user profile */
   updateMe: (data) => api.put('/auth/me', data),
+
+  /** Request password reset email */
+  forgotPassword: (email) => api.post('/auth/forgot-password', { email }),
+
+  /** Reset password using token */
+  resetPassword: (token, password) => api.post('/auth/reset-password', { token, password }),
 };
 
 

@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { authAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { Check } from 'lucide-react';
+import { Check, Eye, EyeOff } from 'lucide-react';
 
 const PERKS = [
   'Unlimited AI-powered resume generation',
@@ -20,6 +20,7 @@ export default function Register() {
   const [form, setForm]       = useState({ full_name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors]   = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleGoogleSuccess = async (response) => {
     setLoading(true);
@@ -103,12 +104,24 @@ export default function Register() {
 
             <div>
               <label className="label-glass" htmlFor="password">Password</label>
-              <input
-                id="password" name="password" type="password"
-                value={form.password} onChange={handleChange}
-                placeholder="••••••••"
-                className={`input-glass ${errors.password ? 'border-red-500' : ''}`}
-              />
+              <div className="relative">
+                <input
+                  id="password" 
+                  name="password" 
+                  type={showPassword ? 'text' : 'password'}
+                  value={form.password} 
+                  onChange={handleChange}
+                  placeholder="••••••••"
+                  className={`input-glass pr-12 ${errors.password ? 'border-red-500' : ''}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300 transition-colors p-2"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
               {errors.password && <span className="text-red-400 text-sm mt-1">{errors.password}</span>}
             </div>
 
