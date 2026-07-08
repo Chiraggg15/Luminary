@@ -177,7 +177,7 @@ export default function Settings() {
 
           {/* Danger Zone */}
           <div className="glass-panel p-4 border-red-500/10">
-            <p className="text-xs font-bold uppercase tracking-widest text-red-500/70 mb-3">Danger Zone</p>
+            <p className="text-xs font-bold uppercase tracking-widest text-green-500/70 mb-3">Danger Zone</p>
             <button
               onClick={handleLogout}
               className="w-full flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-red-400 hover:text-white hover:bg-red-500/10 border border-red-500/20 hover:border-red-500/40 rounded-lg transition-all"

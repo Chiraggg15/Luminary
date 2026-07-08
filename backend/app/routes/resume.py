@@ -181,3 +181,46 @@ def update_score(resume_id):
     ResumeModel.update_ats_score(db, resume_id, int(score))
 
     return jsonify({"message": "Score updated successfully"}), 200
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# POST /api/resume/<id>/share  — Toggle public sharing + generate share token
+# ────────────────────────────────────────────────────────────────────────────
+@resume_bp.route("/<resume_id>/share", methods=["POST"])
+@jwt_required_custom
+def toggle_share(resume_id):
+    """Enable or disable public sharing for a resume. Returns share token when enabled."""
+    import secrets
+    user_id = get_current_user_id()
+    resume = ResumeModel.find_by_id(db, resume_id)
+
+    if not resume:
+        return jsonify({"error": "Resume not found"}), 404
+    if resume.get("user_id") != user_id:
+        return jsonify({"error": "Access denied"}), 403
+
+    data = request.get_json() or {}
+    enable = data.get("enable", True)
+
+    if enable:
+        token = resume.get("share_token") or secrets.token_urlsafe(12)
+        ResumeModel.update(db, resume_id, {"is_public": True, "share_token": token})
+        return jsonify({"is_public": True, "share_token": token}), 200
+    else:
+        ResumeModel.update(db, resume_id, {"is_public": False, "share_token": None})
+        return jsonify({"is_public": False, "share_token": None}), 200
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# GET /api/resume/public/<token>  — Public read-only resume view (NO AUTH)
+# ────────────────────────────────────────────────────────────────────────────
+@resume_bp.route("/public/<token>", methods=["GET"])
+def get_public_resume(token):
+    """Return a publicly shared resume by its share token. No authentication required."""
+    resume = ResumeModel.find_by_share_token(db, token)
+    if not resume:
+        return jsonify({"error": "Resume not found or sharing is disabled"}), 404
+    # Return serialized resume but strip user_id for privacy
+    serialized = ResumeModel.serialize(resume)
+    serialized.pop("user_id", None)
+    return jsonify({"resume": serialized}), 200

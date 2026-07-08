@@ -1,13 +1,14 @@
 import React from 'react';
 
-const ATSMaximizer = ({ resumeData }) => {
-  // No customizations applied to ensure 100% ATS compatibility
+const ATSMaximizer = ({ resumeData, customizations }) => {
   const styles = {
-    fontFamily: 'Arial, sans-serif',
+    fontFamily: customizations?.fontFamily || 'Arial, sans-serif',
     color: '#000000',
     lineHeight: 1.5,
     fontSize: '11pt'
   };
+
+  const accentColor = customizations?.accentColor || '#000000';
 
   return (
     <div className="bg-white p-12 max-w-4xl mx-auto min-h-[1056px]" style={styles}>
@@ -23,14 +24,14 @@ const ATSMaximizer = ({ resumeData }) => {
 
       {resumeData?.summary && (
         <div className="mb-6">
-          <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Summary</h2>
+          <h2 className="text-lg font-bold uppercase border-b mb-2" style={{ borderColor: accentColor, color: accentColor }}>Summary</h2>
           <p className="text-sm">{resumeData.summary}</p>
         </div>
       )}
 
       {resumeData?.skills && (
         <div className="mb-6">
-          <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Skills</h2>
+          <h2 className="text-lg font-bold uppercase border-b mb-2" style={{ borderColor: accentColor, color: accentColor }}>Skills</h2>
           <p className="text-sm">
             {resumeData.skills.technical && resumeData.skills.technical.join(', ')}
             {resumeData.skills.technical && resumeData.skills.soft && ', '}
@@ -41,7 +42,7 @@ const ATSMaximizer = ({ resumeData }) => {
 
       {resumeData?.experience && resumeData.experience.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Professional Experience</h2>
+          <h2 className="text-lg font-bold uppercase border-b mb-2" style={{ borderColor: accentColor, color: accentColor }}>Professional Experience</h2>
           {resumeData.experience.map((exp, idx) => (
             <div key={idx} className="mb-4">
               <div className="flex justify-between font-bold text-sm">
@@ -63,7 +64,7 @@ const ATSMaximizer = ({ resumeData }) => {
 
       {resumeData?.education && resumeData.education.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Education</h2>
+          <h2 className="text-lg font-bold uppercase border-b mb-2" style={{ borderColor: accentColor, color: accentColor }}>Education</h2>
           {resumeData.education.map((edu, idx) => (
             <div key={idx} className="mb-2 text-sm flex justify-between">
               <div>
@@ -79,7 +80,7 @@ const ATSMaximizer = ({ resumeData }) => {
       
       {resumeData?.certifications && resumeData.certifications.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-lg font-bold uppercase border-b border-black mb-2">Certifications</h2>
+          <h2 className="text-lg font-bold uppercase border-b mb-2" style={{ borderColor: accentColor, color: accentColor }}>Certifications</h2>
           {resumeData.certifications.map((cert, idx) => (
             <div key={idx} className="mb-1 text-sm">
               <span className="font-bold">{cert.name}</span>, {cert.issuer} ({cert.year})

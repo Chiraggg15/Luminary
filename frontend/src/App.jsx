@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
@@ -14,6 +15,10 @@ import Settings from './pages/Settings';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import TemplateGallery from './pages/TemplateGallery';
+import JobTracker from './pages/JobTracker';
+import SalaryEstimator from './pages/SalaryEstimator';
+import SkillGap from './pages/SkillGap';
+import PublicResume from './pages/PublicResume';
 
 /* eslint-disable react/prop-types */
 const ProtectedRoute = ({ children }) => {
@@ -29,58 +34,64 @@ const ProtectedRoute = ({ children }) => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Router>
-      <div className="min-h-screen bg-zinc-950 font-sans selection:bg-emerald-500/20 selection:text-emerald-300">
-        <Toaster 
-          position="top-right" 
-          toastOptions={{
-            style: {
-              background: '#18181b', // zinc-900
-              color: '#f4f4f5',      // zinc-100
-              border: '1px solid #27272a', // zinc-800
-              borderRadius: '0.5rem',
-              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)'
-            },
-            success: {
-              iconTheme: { primary: '#10b981', secondary: '#18181b' }, // emerald-500
-            },
-            error: {
-              iconTheme: { primary: '#ef4444', secondary: '#18181b' },
-            }
-          }}
-        />
-        <Routes>
-          <Route path="/" element={<Landing />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password/:token" element={<ResetPassword />} />
-          <Route
-            path="/*"
-            element={
-              <ProtectedRoute>
-                <div className="max-w-7xl mx-auto flex flex-col min-h-screen">
-                  <Navbar />
-                  <main className="flex-1 px-4 sm:px-6 md:px-8 pb-12 w-full">
-                    <Routes>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/resume/new" element={<ResumeBuilder />} />
-                      <Route path="/resume/:id" element={<ResumeBuilder />} />
-                      <Route path="/cover-letter" element={<CoverLetter />} />
-                      <Route path="/mock-interview" element={<MockInterview />} />
-                      <Route path="/settings" element={<Settings />} />
-                      <Route path="/templates" element={<TemplateGallery />} />
-                      <Route path="*" element={<Navigate to="/dashboard" replace />} />
-                    </Routes>
-                  </main>
-                </div>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </div>
-    </Router>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen bg-zinc-950 font-sans selection:bg-emerald-500/20 selection:text-emerald-300">
+            <Toaster
+              position="top-right"
+              toastOptions={{
+                style: {
+                  background: '#18181b',
+                  color: '#f4f4f5',
+                  border: '1px solid #27272a',
+                  borderRadius: '0.5rem',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)'
+                },
+                success: { iconTheme: { primary: '#10b981', secondary: '#18181b' } },
+                error:   { iconTheme: { primary: '#ef4444', secondary: '#18181b' } },
+              }}
+            />
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<Landing />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password/:token" element={<ResetPassword />} />
+              {/* Public resume share — no auth */}
+              <Route path="/r/:token" element={<PublicResume />} />
+
+              {/* Protected routes */}
+              <Route
+                path="/*"
+                element={
+                  <ProtectedRoute>
+                    <div className="max-w-screen-2xl mx-auto flex flex-col min-h-screen">
+                      <Navbar />
+                      <main className="flex-1 px-4 sm:px-6 md:px-8 pb-12 w-full">
+                        <Routes>
+                          <Route path="/dashboard"      element={<Dashboard />} />
+                          <Route path="/resume/new"     element={<ResumeBuilder />} />
+                          <Route path="/resume/:id"     element={<ResumeBuilder />} />
+                          <Route path="/cover-letter"   element={<CoverLetter />} />
+                          <Route path="/mock-interview" element={<MockInterview />} />
+                          <Route path="/settings"       element={<Settings />} />
+                          <Route path="/templates"      element={<TemplateGallery />} />
+                          <Route path="/job-tracker"    element={<JobTracker />} />
+                          <Route path="/salary"         element={<SalaryEstimator />} />
+                          <Route path="/skill-gap"      element={<SkillGap />} />
+                          <Route path="*"               element={<Navigate to="/dashboard" replace />} />
+                        </Routes>
+                      </main>
+                    </div>
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+          </div>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

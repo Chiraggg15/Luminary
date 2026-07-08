@@ -31,7 +31,6 @@ const TemplateCustomizer = ({ customizations, onChange, templateConfig }) => {
         <p className="text-xs text-zinc-400">Personalize your resume design</p>
       </div>
 
-      {templateConfig?.id !== 'ats-maximizer' ? (
         <>
           {/* Colors */}
           <div>
@@ -71,11 +70,6 @@ const TemplateCustomizer = ({ customizations, onChange, templateConfig }) => {
             </select>
           </div>
         </>
-      ) : (
-        <div className="p-4 bg-yellow-500/10 rounded-md border border-yellow-500/30 text-yellow-400 text-sm">
-          <strong>ATS Maximizer</strong> template does not support customizations to ensure 100% parser compatibility.
-        </div>
-      )}
 
       {/* Template Info */}
       <div className="mt-auto pt-4 border-t border-zinc-800">

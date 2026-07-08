@@ -6,6 +6,26 @@
   body {
     @apply bg-zinc-950 text-zinc-300 antialiased selection:bg-emerald-500/30 selection:text-emerald-200 font-sans;
   }
+  /* ── Light Theme Overrides ─────────────────────────────────────────── */
+  .light body, html.light body {
+    @apply bg-zinc-50 text-zinc-800;
+  }
+  html.light .glass-panel {
+    @apply bg-white border-zinc-200 shadow-md;
+  }
+  html.light .input-glass {
+    @apply bg-zinc-100 border-zinc-300 text-zinc-900 placeholder:text-zinc-400;
+    color-scheme: light;
+  }
+  html.light .label-glass {
+    @apply text-zinc-600;
+  }
+  html.light .btn-secondary {
+    @apply bg-zinc-200 text-zinc-900 border-zinc-300 hover:bg-zinc-300;
+  }
+  html.light nav {
+    @apply bg-white/90 border-zinc-200;
+  }
 }
 
 @layer components {

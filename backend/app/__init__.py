@@ -40,6 +40,7 @@ def create_app(config_class=Config):
     from .routes.interview import interview_bp
     from .routes.docx import docx_bp
     from .routes.templates import templates_bp
+    from .routes.jobs import jobs_bp
 
     app.register_blueprint(auth_bp,      url_prefix="/api/auth")
     app.register_blueprint(resume_bp,    url_prefix="/api/resume")
@@ -48,6 +49,7 @@ def create_app(config_class=Config):
     app.register_blueprint(interview_bp, url_prefix="/api/interview")
     app.register_blueprint(docx_bp,      url_prefix="/api/docx")
     app.register_blueprint(templates_bp, url_prefix="/api/templates")
+    app.register_blueprint(jobs_bp,      url_prefix="/api/jobs")
 
     # ── Health Check Route ───────────────────────────────────────────────────
     @app.route("/api/health")

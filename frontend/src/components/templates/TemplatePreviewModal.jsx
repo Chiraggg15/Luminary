@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Check, Download } from 'lucide-react';
 import TemplateCustomizer from './TemplateCustomizer';
 import TemplateRenderer from './TemplateRenderer';
-import api from '../../services/api';
+import api, { resumeAPI } from '../../services/api';
 import toast from 'react-hot-toast';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
@@ -15,21 +15,41 @@ const TemplatePreviewModal = ({ template, resumeData, resumeId, onClose, onApply
   const [isApplying, setIsApplying] = useState(false);
 
   const handleApply = async () => {
-    if (!resumeId) {
-      toast.error("Please create a resume first before applying a template.");
-      return;
-    }
-
     setIsApplying(true);
     try {
-      await api.post('/templates/apply', {
-        resume_id: resumeId,
-        template_id: template.id,
-        customizations: customizations
-      });
-      toast.success('Template applied successfully!');
-      if (onApplySuccess) onApplySuccess();
-      onClose();
+      if (!resumeId) {
+        // Create new resume first if they don't have one yet
+        const newResume = {
+          title: `My ${template.name} Resume`,
+          template: {
+            id: template.id,
+            customizations: customizations,
+            appliedAt: new Date().toISOString()
+          },
+          personal_info: { full_name: '', email: '', phone: '', location: '', linkedin: '', github: '', portfolio: '', summary: '' },
+          experience: [],
+          education: [],
+          skills: { technical: [], soft: [] },
+          projects: [],
+          certifications: [],
+          languages: []
+        };
+        
+        const res = await resumeAPI.create(newResume);
+        const newId = res.data.resume.id || res.data.resume._id;
+        toast.success('New resume created with template!');
+        if (onApplySuccess) onApplySuccess(newId);
+        onClose();
+      } else {
+        await api.post('/templates/apply', {
+          resume_id: resumeId,
+          template_id: template.id,
+          customizations: customizations
+        });
+        toast.success('Template applied successfully!');
+        if (onApplySuccess) onApplySuccess(resumeId);
+        onClose();
+      }
     } catch (err) {
       toast.error(err.response?.data?.error || 'Failed to apply template');
     } finally {

@@ -1,4 +1,4 @@
-02523# ── Core Framework ───────────────────────────────────────────────────────────
+# ── Core Framework ───────────────────────────────────────────────────────────
 flask==3.0.3
 flask-cors==4.0.1
 flask-jwt-extended==4.6.0
@@ -12,13 +12,9 @@ python-dotenv==1.0.1
 
 # ── AI / NLP ─────────────────────────────────────────────────────────────────
 google-generativeai==0.8.3
-# spaCy: install separately with pre-built wheels (see README)
-# Run: pip install spacy --prefer-binary
-# Then: python -m spacy download en_core_web_sm
 
 # ── Utilities ────────────────────────────────────────────────────────────────
-# gunicorn is Linux-only; use waitress on Windows for production:
-waitress==3.0.0
+gunicorn==22.0.0
 httpx==0.27.2
 google-auth==2.30.0
 flask-mail==0.9.1

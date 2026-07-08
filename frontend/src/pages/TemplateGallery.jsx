@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Sparkles, Filter, Search, Crown } from 'lucide-react';
 import TemplateCard from '../components/templates/TemplateCard';
 import TemplatePreviewModal from '../components/templates/TemplatePreviewModal';
@@ -120,6 +121,7 @@ const mapResumeData = (backendResume) => {
 };
 
 const TemplateGallery = () => {
+  const navigate = useNavigate();
   const [templates, setTemplates] = useState([]);
   const [user, setUser] = useState(null);
   const [userResumes, setUserResumes] = useState([]);
@@ -166,9 +168,14 @@ const TemplateGallery = () => {
     return matchesTier && matchesSearch;
   });
 
-  const handleApplySuccess = () => {
-    // Optional redirect to Resume Builder or success message
-    toast.success("Template set! Go to Resume Builder to export.");
+  const handleApplySuccess = (appliedResumeId) => {
+    const targetId = appliedResumeId || activeResume?.id;
+    if (targetId) {
+      toast.success("Template applied! Opening resume editor...");
+      navigate(`/resume/${targetId}`);
+    } else {
+      toast.success("Template applied successfully!");
+    }
   };
 
   if (isLoading) {

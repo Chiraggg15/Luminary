@@ -104,6 +104,8 @@ class ResumeModel:
             "languages": data.get("languages", []),
             "ats_score": None,
             "is_ai_generated": data.get("is_ai_generated", False),
+            "is_public": False,
+            "share_token": None,
             "created_at": now,
             "updated_at": now,
         }
@@ -133,6 +135,7 @@ class ResumeModel:
         allowed_fields = [
             "title", "template", "personal_info", "experience",
             "education", "skills", "projects", "certifications", "languages", "ats_score",
+            "is_ai_generated", "is_public", "share_token",
         ]
         update_data = {k: v for k, v in data.items() if k in allowed_fields}
         update_data["updated_at"] = datetime.now(timezone.utc)
@@ -165,7 +168,14 @@ class ResumeModel:
         doc["id"] = str(doc.pop("_id"))
         doc["created_at"] = str(doc.get("created_at", ""))
         doc["updated_at"] = str(doc.get("updated_at", ""))
+        doc.setdefault("is_public", False)
+        doc.setdefault("share_token", None)
         return doc
+
+    @staticmethod
+    def find_by_share_token(db, token: str) -> dict | None:
+        """Find a resume by its public share token (no auth needed)."""
+        return db[ResumeModel.COLLECTION].find_one({"share_token": token, "is_public": True})
 
     # ── Snapshot / Version History ────────────────────────────────────────────
 

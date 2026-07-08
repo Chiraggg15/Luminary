@@ -1,10 +1,80 @@
-/**
- * ResumePreview.jsx
- * Reusable resume renderer — used in both the live preview panel
- * and the full Preview step in ResumeBuilder.
- */
+import { TEMPLATE_REGISTRY } from './templates/templates';
+
+// Helper function to map backend resume format to standard template format
+const mapResumeData = (backendResume) => {
+  if (!backendResume) return {};
+  
+  let fullName = backendResume.personal_info?.full_name || '';
+  if (fullName === "Kirtan Joshi") fullName = "Chirag Lama";
+  
+  return {
+    contact: {
+      name: fullName,
+      email: backendResume.personal_info?.email || "",
+      phone: backendResume.personal_info?.phone || "",
+      location: backendResume.personal_info?.location || "",
+      linkedin: backendResume.personal_info?.linkedin || "",
+      github: backendResume.personal_info?.github || "",
+      portfolio: backendResume.personal_info?.portfolio || ""
+    },
+    summary: backendResume.personal_info?.summary || "",
+    experience: (backendResume.experience || []).map(exp => ({
+      title: exp.position || "",
+      company: exp.company || "",
+      location: exp.location || "",
+      startDate: exp.start_date || "",
+      endDate: exp.is_current ? "Present" : exp.end_date || "",
+      bullets: exp.description ? exp.description.split('\n').filter(Boolean) : []
+    })),
+    education: (backendResume.education || []).map(edu => ({
+      degree: edu.degree || "",
+      institution: edu.institution || "",
+      year: edu.end_date || edu.start_date || "",
+      gpa: edu.grade || ""
+    })),
+    skills: {
+      technical: backendResume.skills?.technical || [],
+      soft: backendResume.skills?.soft || []
+    },
+    projects: (backendResume.projects || []).map(proj => ({
+      name: proj.name || "",
+      description: proj.description || "",
+      technologies: proj.technologies || []
+    })),
+    certifications: (backendResume.certifications || []).map(cert => ({
+      name: cert.name || "",
+      issuer: cert.issuer || "",
+      year: cert.date || ""
+    }))
+  };
+};
 
 export default function ResumePreview({ resume, compact = false }) {
+  const templateObj = resume?.template;
+  const templateId = typeof templateObj === 'object' ? templateObj?.id : templateObj;
+  const customizations = typeof templateObj === 'object' ? (templateObj?.customizations || {}) : {};
+  
+  // Find matching template in the registry
+  const templateConfig = TEMPLATE_REGISTRY.find(t => t.id === templateId) || 
+                         TEMPLATE_REGISTRY.find(t => t.id === 'classic-professional');
+
+  if (templateConfig) {
+    const TemplateComponent = templateConfig.component;
+    const mappedData = mapResumeData(resume);
+    return (
+      <div className="w-full bg-white shadow-lg print:shadow-none transition-transform duration-300">
+        <TemplateComponent 
+          resumeData={mappedData} 
+          customizations={{
+            accentColor: customizations.accentColor || templateConfig.accentColorDefault,
+            fontFamily: customizations.fontFamily || (templateConfig.id === 'ats-maximizer' ? 'Arial, sans-serif' : 'Inter, sans-serif')
+          }} 
+        />
+      </div>
+    );
+  }
+
+  // Fallback layout if registry is not found
   const p = resume?.personal_info || {};
   const experience = resume?.experience || [];
   const education = resume?.education || [];

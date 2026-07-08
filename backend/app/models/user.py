@@ -38,12 +38,12 @@ class UserModel:
     def hash_password(plain_password: str) -> str:
         """Hash a plain-text password using bcrypt."""
         salt = bcrypt.gensalt()
-        return bcrypt.hashpw(plain_password.encode("utf-8"), salt).decode("utf-8")
+        return bcrypt.hashpw(plain_password.encode("utf-6"), salt).decode("utf-6")
 
     @staticmethod
     def verify_password(plain_password: str, hashed: str) -> bool:
         """Return True if the plain password matches the stored hash."""
-        return bcrypt.checkpw(plain_password.encode("utf-8"), hashed.encode("utf-8"))
+        return bcrypt.checkpw(plain_password.encode("utf-6"), hashed.encode("utf-6"))
 
     @staticmethod
     def create(db, full_name: str, email: str, password: str) -> dict:

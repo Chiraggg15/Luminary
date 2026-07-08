@@ -44,6 +44,7 @@ export default function ResumeBuilder() {
   const [showPreview, setShowPreview] = useState(true);
   const [historyOpen, setHistoryOpen] = useState(false);
   const [docxLoading, setDocxLoading] = useState(false);
+  const [previewWidth, setPreviewWidth] = useState(380);
 
   const [aiForm, setAiForm] = useState({ job_title: '', skills: '', experience_years: 0, industry: 'Technology', job_description: '', resume_text: '' });
   const [analysis, setAnalysis] = useState(null);
@@ -123,6 +124,7 @@ export default function ResumeBuilder() {
       const gen = res.data.generated;
       setResume(r => ({
         ...r,
+        is_ai_generated: true,
         personal_info: { ...r.personal_info, summary: gen.summary },
         skills: { ...r.skills, technical: [...new Set([...r.skills.technical, ...gen.suggested_skills])] },
       }));
@@ -516,14 +518,43 @@ export default function ResumeBuilder() {
 
           {/* Live Preview Panel (steps 0-3 only) */}
           {canShowPreviewPanel && showPreview && (
-            <div className="hidden xl:block w-72 shrink-0">
+            <div className="hidden xl:block shrink-0 transition-all duration-100" style={{ width: `${previewWidth}px` }}>
               <div className="sticky top-24">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-xs font-bold uppercase tracking-widest text-zinc-500">Live Preview</span>
+                {/* Adjuster Toolbar */}
+                <div className="flex items-center justify-between mb-3 bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-800/80 backdrop-blur-md shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[11px] font-black uppercase tracking-wider text-zinc-300">Live Preview</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] font-bold text-zinc-500 uppercase mr-1">{previewWidth}px</span>
+                    <input 
+                      type="range" 
+                      min="320" 
+                      max="600" 
+                      value={previewWidth} 
+                      onChange={e => setPreviewWidth(Number(e.target.value))}
+                      className="w-20 sm:w-24 h-1 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-emerald-500 focus:outline-none"
+                    />
+                  </div>
                 </div>
-                <div className="overflow-hidden rounded-xl border border-zinc-700/50 shadow-xl" style={{ transform: 'scale(0.72)', transformOrigin: 'top left', width: '139%', pointerEvents: 'none' }}>
-                  <ResumePreview resume={resume} compact={false} />
+                {/* Scale Container to prevent A4 elements squishing */}
+                <div 
+                  className="overflow-hidden rounded-xl border border-zinc-800 shadow-2xl bg-white" 
+                  style={{ 
+                    width: `${previewWidth}px`, 
+                    height: `${1123 * (previewWidth / 794)}px`,
+                    position: 'relative'
+                  }}
+                >
+                  <div 
+                    className="absolute top-0 left-0 w-[794px] h-[1123px] origin-top-left pointer-events-none select-none" 
+                    style={{ 
+                      transform: `scale(${previewWidth / 794})` 
+                    }}
+                  >
+                    <ResumePreview resume={resume} compact={false} />
+                  </div>
                 </div>
               </div>
             </div>

@@ -39,3 +39,31 @@ def generate_questions():
         return jsonify({"questions": result}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# POST /api/interview/evaluate
+# Body: { "question": str, "user_answer": str, "model_answer": str, "job_title": str }
+# ────────────────────────────────────────────────────────────────────────────
+@interview_bp.route("/evaluate", methods=["POST"])
+@jwt_required_custom
+def evaluate_answer():
+    """
+    Evaluate a user's practice answer against the AI model answer.
+    Returns a score, strengths, and improvement tips.
+    """
+    data = request.get_json() or {}
+
+    if not data.get("question") or not data.get("user_answer"):
+        return jsonify({"error": "question and user_answer are required"}), 400
+
+    try:
+        result = AIService.evaluate_answer(
+            question=data["question"],
+            user_answer=data["user_answer"],
+            model_answer=data.get("model_answer", ""),
+            job_title=data.get("job_title", ""),
+        )
+        return jsonify({"evaluation": result}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500

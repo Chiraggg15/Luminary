@@ -126,3 +126,126 @@ def improve_summary():
         return jsonify({"improved_summary": improved}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+# ────────────────────────────────────────────────────────────────────────────
+# POST /api/ai/analyze-detailed
+# Body: { "resume_text": str, "job_description": str }
+# ────────────────────────────────────────────────────────────────────────────
+@ai_bp.route("/analyze-detailed", methods=["POST"])
+@jwt_required_custom
+def analyze_resume_detailed():
+    """Return a detailed ATS breakdown: found/missing keywords, section scores, suggestions."""
+    data = request.get_json() or {}
+
+    if not data.get("resume_text") or not data.get("job_description"):
+        return jsonify({"error": "resume_text and job_description are required"}), 400
+
+    try:
+        result = AIService.analyze_resume_detailed(
+            resume_text=data["resume_text"],
+            job_description=data["job_description"],
+        )
+        return jsonify({"analysis": result}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ── POST /api/ai/salary ────────────────────────────────────────────────────
+@ai_bp.route("/salary", methods=["POST"])
+@jwt_required_custom
+def estimate_salary():
+    """Estimate salary range for a job title, location, and experience level."""
+    data = request.get_json() or {}
+    if not data.get("job_title"):
+        return jsonify({"error": "job_title is required"}), 400
+    try:
+        result = AIService.estimate_salary(
+            job_title=data["job_title"],
+            location=data.get("location", "United States"),
+            experience_years=int(data.get("experience_years", 0)),
+            skills=data.get("skills", []),
+        )
+        return jsonify({"salary": result}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ── POST /api/ai/skill-gap ────────────────────────────────────────────────
+@ai_bp.route("/skill-gap", methods=["POST"])
+@jwt_required_custom
+def skill_gap():
+    """Analyze skill gap between current skills and a target role."""
+    data = request.get_json() or {}
+    if not data.get("target_role"):
+        return jsonify({"error": "target_role is required"}), 400
+    try:
+        result = AIService.analyze_skill_gap(
+            current_skills=data.get("current_skills", []),
+            target_role=data["target_role"],
+            experience_years=int(data.get("experience_years", 0)),
+        )
+        return jsonify({"gap": result}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ── POST /api/ai/grammar-check ────────────────────────────────────────────
+@ai_bp.route("/grammar-check", methods=["POST"])
+@jwt_required_custom
+def grammar_check():
+    """Check resume text for grammar, weak verbs, and passive voice issues."""
+    data = request.get_json() or {}
+    if not data.get("text"):
+        return jsonify({"error": "text is required"}), 400
+    try:
+        result = AIService.check_grammar(text=data["text"])
+        return jsonify({"check": result}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ── POST /api/ai/translate ────────────────────────────────────────────────
+@ai_bp.route("/translate", methods=["POST"])
+@jwt_required_custom
+def translate_resume():
+    """Translate resume text fields to a target language."""
+    data = request.get_json() or {}
+    if not data.get("target_language") or not data.get("resume_data"):
+        return jsonify({"error": "target_language and resume_data are required"}), 400
+    try:
+        result = AIService.translate_resume(
+            resume_data=data["resume_data"],
+            target_language=data["target_language"],
+        )
+        return jsonify({"translated": result}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+# ── POST /api/ai/email-cover-letter ──────────────────────────────────────
+@ai_bp.route("/email-cover-letter", methods=["POST"])
+@jwt_required_custom
+def email_cover_letter():
+    """Send a cover letter via email."""
+    from app import mail
+    from flask_mail import Message
+    data = request.get_json() or {}
+    recipient = data.get("recipient_email", "").strip()
+    cover_letter = data.get("cover_letter", "").strip()
+    subject = data.get("subject", "Job Application — Cover Letter").strip()
+    sender_name = data.get("sender_name", "Applicant").strip()
+
+    if not recipient or not cover_letter:
+        return jsonify({"error": "recipient_email and cover_letter are required"}), 400
+
+    try:
+        msg = Message(
+            subject=subject,
+            recipients=[recipient],
+            body=f"{cover_letter}\n\n---\nSent via Luminary AI Resume Builder",
+        )
+        mail.send(msg)
+        return jsonify({"message": f"Cover letter sent to {recipient}"}), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to send email: {str(e)}"}), 500
